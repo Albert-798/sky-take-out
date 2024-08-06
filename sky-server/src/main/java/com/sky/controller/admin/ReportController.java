@@ -88,4 +88,5 @@ public class ReportController {
         return Result.success(reportService.getSalesTop10(begin,end));
     }
 
+
 }
