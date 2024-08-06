@@ -128,41 +128,25 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
-        //"requestPayment:fail parameter error: parameter.tim…rameter.paySign should be String instead of Null;"
         // 当前登录用户id
         Long userId = BaseContext.getCurrentId();
         User user = userMapper.getById(userId);
 
-    /* //调用微信支付接口，生成预支付交易单
-    JSONObject jsonObject = weChatPayUtil.pay(
-            ordersPaymentDTO.getOrderNumber(), //商户订单号
-            new BigDecimal(0.01), //支付金额，单位 元
-            "苍穹外卖订单", //商品描述
-            user.getOpenid() //微信用户的openid
-    ); */
-        // if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {
-        //     throw new OrderBusinessException("该订单已支付");
-        // }
+//        //调用微信支付接口，生成预支付交易单
+//        JSONObject jsonObject = weChatPayUtil.pay(
+//                ordersPaymentDTO.getOrderNumber(), //商户订单号
+//                new BigDecimal(0.01), //支付金额，单位 元
+//                "苍穹外卖订单", //商品描述
+//                user.getOpenid() //微信用户的openid
+//        );
 
-        // Mocked response for demonstration purposes
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", "ORDERPAID");
+        JSONObject jsonObject=new JSONObject();
+        if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {
+            throw new OrderBusinessException("该订单已支付");
+        }
 
-        // Convert the JSON response to OrderPaymentVO
         OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
-        // vo.setPackageStr(jsonObject.getString("package"));
-
-        //为替代微信支付成功后的数据库订单状态更新，多定义一个方法进行修改
-        Integer OrderPaidStatus = Orders.PAID; //支付状态，已支付
-        Integer OrderStatus = Orders.TO_BE_CONFIRMED;  //订单状态，待接单
-        //发现没有将支付时间 check_out属性赋值，所以在这里更新
-        LocalDateTime check_out_time = LocalDateTime.now();
-
-        // Assuming ordersPaymentDTO contains the order ID
-        Long orderId = ordersPaymentDTO.getOrderId(); // Add a method getOrderId() in OrdersPaymentDTO if it doesn't exist
-
-        // Update the order status in the database
-        orderMapper.updateStatus(OrderStatus, OrderPaidStatus, check_out_time, orderId);
+        vo.setPackageStr(jsonObject.getString("package"));
 
         return vo;
     }
