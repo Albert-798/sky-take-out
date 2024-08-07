@@ -13,8 +13,8 @@ sky:
     password: 123456
     database: 0
   wechat:
-    appid: wx20e1cd32ee4a9db1
-    secret: d2ff50d9799bb20a520d2cd720e49a28
+    appid: 
+    secret:
 #
 #    mchid: 1561414331
 #    mchSerialNo: 4B3B3DC35414AD50B1B755BAF8DE9CC7CF407606
